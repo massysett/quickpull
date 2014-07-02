@@ -18,19 +18,18 @@ modDesc
   :: FilePath
   -- ^ Reading was started in this directory
 
-  -> FilePath
-  -- ^ Name of specific file
-
   -> [FilePath]
   -- ^ Directory stack
 
+  -> FilePath
+  -- ^ Name of specific file
+
   -> ModDesc
 
-modDesc strt fln ds = ModDesc
-  (joinPath $ strt : reverse ds ++ [fnl])
-  (concat . intersperse "." $ modName)
-  where
-    modName = reverse ds ++ [takeWhile (/= '.') fln]
+modDesc strt ds fln = ModDesc
+  (joinPath $ strt : reverse ds ++ [fln])
+  (reverse ds ++ [takeWhile (/= '.') fln])
+
 
 -- | Pulls all modules from the given directory.  A module is any file
 -- that begins with a capital letter and ends in @.hs@.
@@ -46,7 +45,7 @@ allModules = modsInDirectory []
 -- started; returns a single path to the relevant directory.
 
 concatDirs :: FilePath -> [FilePath] -> FilePath
-concatDirs st rst = joinPath $ st ++ reverse rst
+concatDirs st rst = joinPath $ st : reverse rst
 
 isInterestingFile :: FilePath -> Bool
 isInterestingFile p = case p of
@@ -70,14 +69,17 @@ modsInDirectory
 
   -> IO [ModDesc]
 modsInDirectory stk strt = do
-  filesAnddirs <- fmap (filter (\x -> x /= "." && x /= ".."))
-    . getDirectoryContents $ concatDirs stk strt
+  filesAndDirs <- fmap (filter (\x -> x /= "." && x /= ".."))
+    . getDirectoryContents $ concatDirs strt stk
   bools <- mapM doesDirectoryExist filesAndDirs
   let ps = zip bools filesAndDirs
       dirs = filter isInterestingDir . map snd . filter fst $ ps
       files = filter isInterestingFile . map snd
         . filter (not . fst) $ ps
-      
+      mods = map (modDesc strt stk) files
+      readDir dirName = modsInDirectory (dirName : stk) strt
+  subdirs <- fmap concat . mapM readDir $ dirs
+  return $ mods ++ subdirs      
   
 
 main :: IO ()
