@@ -17,6 +17,9 @@ base = C.closedOpen "base" [4,5,0,0] [4,8]
 directory :: C.Package
 directory = C.closedOpen "directory" [1,1,0,2] [1,3]
 
+filepath :: C.Package
+filepath = C.closedOpen "filepath" [1,3,0,0] [1,4]
+
 properties :: C.Properties
 properties = C.empty
   { C.prName = "quickpull"
@@ -60,6 +63,7 @@ executable = C.Executable "quickpull"
     [ base
     , quickcheck
     , directory
+    , filepath
     ]
   , C.defaultLanguage C.Haskell2010
   , C.hsSourceDirs ["lib", "bin"]
