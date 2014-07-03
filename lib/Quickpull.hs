@@ -4,6 +4,7 @@ module Quickpull
   , Node(..)
   , group
   , test
+  , quickcheckTree
   ) where
 
 import Test.QuickCheck
@@ -55,3 +56,10 @@ instance Show TestTree where
         Group ts -> indent d ("group: " ++ s)
           ++ concatMap (go (d + 1)) ts
         Test _ -> indent d ("test: " ++ s)
+
+quickcheckTree
+  :: Testable prop
+  => (Args -> prop -> IO Result)
+  -> TestTree
+  -> IO [Result]
+quickcheckTree = undefined
