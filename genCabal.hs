@@ -50,6 +50,8 @@ library ms = C.Library
   [ C.buildDepends
     [ base
     , quickcheck
+    , filepath
+    , directory
     ]
   , C.defaultLanguage C.Haskell2010
   , C.hsSourceDirs ["lib"]
