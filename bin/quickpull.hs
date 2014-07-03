@@ -72,7 +72,7 @@ modsInDirectory
   -> IO [ModDesc]
 modsInDirectory stk strt = do
   filesAndDirs <- fmap (filter (\x -> x /= "." && x /= ".."))
-    . getDirectoryContents $ concatDirs strt stk
+    . fmap sort . getDirectoryContents $ concatDirs strt stk
   bools <- mapM doesDirectoryExist filesAndDirs
   let ps = zip bools filesAndDirs
       dirs = filter isInterestingDir . map snd . filter fst $ ps
@@ -84,26 +84,56 @@ modsInDirectory stk strt = do
   return $ mods ++ subdirs
 
 -- | A single property or tree to test from a file.
-data Qual = QTree | QProp
+data Qual= QTree | QProp
   deriving (Eq, Ord, Show)
 
 
--- | A 'Qual' bundled up with other information about the 'Qual'.
-data Qinfo = Qinfo
+-- | Metadata about a particular test or group.
+data Meta = Meta
   { qModDesc :: ModDesc
-  -- ^ Name of file providing the 'Qual'.
+  -- ^ Name of file providing this test or group.
 
   , linenum :: Int
-  -- ^ Line number of the 'Qual'
-
-  , qual :: Qual
+  -- ^ Line number of the test or group.
 
   , qName :: String
-  -- ^ The name of the 'Qual', such as @prop_mytest@ or
+  -- ^ The name of the test or group, such as @prop_mytest@ or
   -- @proptree_mytest@.
 
   } deriving (Eq, Ord, Show)
 
+showPair
+  :: Char
+  -- ^ Leader character
+
+  -> (Meta, Qual)
+  -> String
+
+showPair ldr (m, q) = indent 1 $ [ldr] <+> "(" <+> (show m ++ ",") <+>
+  side <+> qualName
+  where
+    side = case q of
+      QTree -> "Left"
+      QProp -> "Right"
+    qualName = (concat . intersperse "." . modName . qModDesc $ m)
+      ++ "." ++ qName m
+
+showList :: [(Meta, Qual)] -> String
+showList ls = case ls of
+  [] -> "[]"
+  x:xs -> showPair '[' x ++ concatMap (showPair ',') xs
+    ++ indent 1 "]"
+
+indent :: Int -> String -> String
+indent i s = replicate (i * indentAmt) ' ' ++ s ++ "\n"
+
+indentAmt :: Int
+indentAmt = 2
+
+(<+>) :: String -> String -> String
+l <+> r
+  | null l || null r = l ++ r
+  | otherwise = l ++ " " ++ r
 
 -- | Pulls all properties from the text of a file.  Properties that
 -- are 'Testable' must begin with @prop_@.  Properties that are a
@@ -134,7 +164,7 @@ getQuals
   :: ModDesc
   -> String
   -- ^ Module text
-  -> [Qinfo]
+  -> [(Meta, Qual)]
 getQuals d
   = mapMaybe mkQ
   . sortBy (comparing fst)
@@ -146,8 +176,8 @@ getQuals d
   . lines
   where
     mkQ (i, var)
-      | "prop_" `isPrefixOf` var = Just $ Qinfo d i QProp var
-      | "proptree_" `isPrefixOf` var = Just $ Qinfo d i QTree var
+      | "prop_" `isPrefixOf` var = Just $ (Meta d i var, QProp)
+      | "proptree_" `isPrefixOf` var = Just $ (Meta d i var, QTree)
       | otherwise = Nothing
     getFirstWord (i, s)
       | null r = Nothing

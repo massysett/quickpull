@@ -59,7 +59,7 @@ instance Show TestTree where
 
 quickcheckTree
   :: Testable prop
-  => (Args -> prop -> IO Result)
+  => (prop -> IO Result)
   -> TestTree
   -> IO [Result]
 quickcheckTree = undefined
