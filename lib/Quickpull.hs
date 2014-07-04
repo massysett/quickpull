@@ -102,7 +102,6 @@ module Quickpull
   , defaultMainWith
   ) where
 
-import Test.QuickCheck (Testable)
 import Quickpull.Types
 import Quickpull.Runners
 

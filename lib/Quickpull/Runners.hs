@@ -9,18 +9,21 @@ import Quickpull.Formatting
 import Quickpull.Render
 import Data.List (foldl')
 import System.Exit
+import Control.Applicative
 
 quickcheckTree
   :: (forall a. Testable a => a -> IO Result)
   -> TestTree
   -> IO [Result]
-quickcheckTree run = go []
+quickcheckTree run = go 0
   where
-    go soFar (TestTree l n) = do
-      putStr . titles $ l : soFar
+    go lvl (TestTree l n) = do
+      putStr . indent lvl $ l
       case n of
-        Group tt -> fmap concat . mapM (go (l : soFar)) $ tt
-        Test t -> fmap (:[]) $ run t
+        Group tt -> fmap concat . mapM (go (succ lvl)) $ tt
+        Test t -> do
+          putStr (replicate (indentAmt * (succ lvl)) ' ')
+          fmap (:[]) $ run t
 
 quickcheckDecree
   :: (forall a. Testable a => a -> IO Result)
@@ -55,7 +58,7 @@ withDecree
   -> IO [[Result]]
 withDecree f ds = mapM g ds
   where
-    g d = quickcheckDecree (f d) d
+    g d = quickcheckDecree (f d) d <* putStrLn ""
 
 runTests
   :: (Decree -> forall a. Testable a => a -> IO Result)
