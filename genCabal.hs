@@ -59,6 +59,23 @@ library ms = C.Library
   , C.LibExposedModules ms
   ]
 
+testSuite :: C.TestSuite
+testSuite = C.TestSuite "quickpull-tests"
+  [ C.TestType C.ExitcodeStdio
+  , C.TestMainIs "quickpull-tests.hs"
+  , C.buildDepends
+    [ base
+    , quickcheck
+    , directory
+    , filepath
+    ]
+  , C.otherModules ["Decrees", "Tests"]
+  , C.ghcOptions ghcOptions
+  , C.hsSourceDirs ["lib", "tests"]
+  , C.defaultLanguage C.Haskell2010
+  ]
+
+
 executable :: C.Executable
 executable = C.Executable "quickpull"
   [ C.buildDepends
@@ -78,6 +95,7 @@ cabal ms = C.empty
   { C.cProperties = properties
   , C.cLibrary = Just $ library ms
   , C.cExecutables = [ executable ]
+  , C.cTestSuites = [testSuite]
   }
 
 main :: IO ()
