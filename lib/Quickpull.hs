@@ -30,6 +30,10 @@
 -- line (which is probably how you write modules anyway if you are
 -- using layout.)
 --
+-- @quickpull@ only gets tests from files ending in @.hs@, and the
+-- property name must be the very first thing on the line; therefore,
+-- literate Haskell files won't work.
+--
 -- You then need a program that actually runs your tests.  To get
 -- started, you need just a short simple program, like this:
 --
@@ -101,24 +105,4 @@ module Quickpull
 import Test.QuickCheck (Testable)
 import Quickpull.Types
 import Quickpull.Runners
-
--- | Create a new 'Group' of tests.
-group
-  :: String
-  -- ^ Group name; a string with no trailing newline.
-
-  -> [TestTree]
-  -> TestTree
-group n ts = TestTree n (Group ts)
-
--- | Create a new 'Test'.
-test
-  :: Testable a
-
-  => String
-  -- ^ Test name; a string with no trailing newline.
-
-  -> a
-  -> TestTree
-test n t = TestTree n (Test t)
 

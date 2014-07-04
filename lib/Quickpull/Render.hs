@@ -31,7 +31,7 @@ metaQuals ls = case ls of
 imports :: [ModDesc] -> String
 imports = concatMap mkImport . nub . sortBy (comparing modName)
   where
-    mkImport m = "import qualified" ++
+    mkImport m = "import qualified " ++
       (concat . intersperse "." . modName $ m) ++ "\n"
 
 -- | Summarizes a Meta in a single line.
@@ -45,7 +45,7 @@ testModule
   -> [(Meta, Qual)]
   -> String
 testModule name ls = concat . intersperse "\n" $
-  [ "module" <+> name <+> "where"
+  [ "module" <+> name <+> "where\n"
   , "import Quickpull"
   , imports . map (modDesc . fst) $ ls
   , unlines

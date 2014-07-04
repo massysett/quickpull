@@ -97,3 +97,25 @@ data Summary = Summary
   , failure :: !Int
   , noExpectedFailure :: !Int
   }
+
+
+-- | Create a new 'Group' of tests.
+group
+  :: String
+  -- ^ Group name; a string with no trailing newline.
+
+  -> [TestTree]
+  -> TestTree
+group n ts = TestTree n (Group ts)
+
+-- | Create a new 'Test'.
+test
+  :: Testable a
+
+  => String
+  -- ^ Test name; a string with no trailing newline.
+
+  -> a
+  -> TestTree
+test n t = TestTree n (Test t)
+

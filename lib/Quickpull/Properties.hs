@@ -1,1 +1,0 @@
-module Quickpull.Properties where
