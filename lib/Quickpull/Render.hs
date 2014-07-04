@@ -34,6 +34,11 @@ imports = concatMap mkImport . nub . sortBy (comparing modName)
     mkImport m = "import qualified" ++
       (concat . intersperse "." . modName $ m) ++ "\n"
 
+-- | Summarizes a Meta in a single line.
+metaLine :: Meta -> String
+metaLine m = qName m <+> "from file" <+> (modPath . modDesc $ m)
+  <+> "at line" <+> show (linenum m) ++ "\n"
+
 testModule
   :: String
   -- ^ Name to use for module
@@ -48,4 +53,15 @@ testModule name ls = concat . intersperse "\n" $
     , "decrees ="
     ]
   , metaQuals ls
+  ]
+
+summary :: Summary -> String
+summary s = unlines
+  [ "success: " ++ show (success s)
+  , "gave up: " ++ show (gaveUp s)
+  , "failure: " ++ show (failure s)
+  , "no expected failure: " ++ show (noExpectedFailure s)
+  , "total: " ++ show
+    (success s + gaveUp s + failure s +
+     noExpectedFailure s)
   ]

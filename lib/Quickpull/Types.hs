@@ -90,3 +90,10 @@ data Decree = Decree
   , item :: Item
   }
 
+-- | Summary of all QuickCheck results.
+data Summary = Summary
+  { success :: !Int
+  , gaveUp :: !Int
+  , failure :: !Int
+  , noExpectedFailure :: !Int
+  }
