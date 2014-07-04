@@ -1,2 +1,3 @@
 quickpull.cabal
 dist/
+tests/Decrees.hs
