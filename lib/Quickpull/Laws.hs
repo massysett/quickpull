@@ -1,3 +1,9 @@
+-- | Functions to build 'TestTree' that test properties of
+-- typeclasses, such as the functor laws, monad laws, and monoid laws.
+-- These functions are rough; for example, they do not shrink on
+-- failure, they are monomorphic, and they do not show the
+-- counterexamples of failing functions.  But they are sufficient to
+-- verify the lawfulness of your types.
 module Quickpull.Laws where
 
 import Quickpull.Types
@@ -64,3 +70,35 @@ monadAssociativity genM genK genUnwrap = do
   u <- genUnwrap
   return $ (u ((m >>= f) >>= g)) === (u (m >>= (\x -> f x >>= g)))
 
+-- | Tests the functor laws:
+--
+-- @fmap id@ equals @id@
+--
+-- @fmap (f . g)@ equals @fmap f . fmap g@
+
+functor
+  :: (Eq b, Show b, Functor f)
+  => Gen (f Int)
+  -- ^ Generates a computation in the functor.
+
+  -> Gen (f Int -> b)
+  -- ^ Generates a computation that unwraps the functor.
+
+  -> TestTree
+functor genK genU = group "functor laws"
+  [ test "identity" tIdentity
+  , test "composition" tComposition
+  ]
+  where
+    tIdentity = do
+      k <- genK
+      u <- genU
+      return $ (u (fmap id k)) === (u (id k))
+
+    tComposition = do
+      k <- genK
+      u <- genU
+      f <- arbitrary
+      let _types = f :: Int -> Int
+      g <- arbitrary
+      return $ (u (fmap (f . g) k)) === (u ((fmap f . fmap g) k))
