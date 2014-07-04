@@ -1,3 +1,4 @@
 #!/bin/sh
 
 runghc genCabal.hs > quickpull.cabal
+runghc -ilib bin/quickpull.hs tests > tests/Decrees.hs
