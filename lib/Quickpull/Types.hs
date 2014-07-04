@@ -1,13 +1,13 @@
 {-# LANGUAGE ExistentialQuantification #-}
 module Quickpull.Types where
 
--- | A tree of tests.  This allows you to group tests for convenient
--- display; it also allows you to write computations that return
--- entire groups of tests.
-
 import Quickpull.Formatting
 import Test.QuickCheck
 import System.FilePath
+
+-- | A tree of tests.  This allows you to group tests for convenient
+-- display; it also allows you to write computations that return
+-- entire groups of tests.
 
 data TestTree = TestTree
   { label :: String
@@ -31,7 +31,7 @@ data Node
   -- ^ A QuickCheck test to run.
 
 -- | A single property or tree to test.
-data Item
+data Article
   = forall a. Testable a => Single a
   | Multi TestTree
 
@@ -87,7 +87,7 @@ makeModDesc strt ds fln = ModDesc
 -- item.
 data Decree = Decree
   { meta :: Meta
-  , item :: Item
+  , item :: Article
   }
 
 -- | Summary of all QuickCheck results.

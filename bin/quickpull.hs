@@ -20,7 +20,7 @@ help pn = unlines
   ]
 
 runnerModuleName :: String
-runnerModuleName = "AllProperties"
+runnerModuleName = "Decrees"
 
 main :: IO ()
 main = do
