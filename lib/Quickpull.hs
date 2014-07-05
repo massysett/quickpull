@@ -1,5 +1,3 @@
-{-# LANGUAGE RankNTypes #-}
-
 -- | Quickpull - a simple testing framework to reduce boilerplating
 --
 -- Quickpull is a testing framework that helps you test multiple
