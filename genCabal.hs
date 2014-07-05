@@ -8,6 +8,21 @@ import qualified Cartel as C
 version :: [Int]
 version = [0,2,0,0]
 
+-- Dependencies are intended to work with GHC 7.4.1.  Versions that
+-- came with GHC 7.4.1:
+-- base-4.5.0.0
+-- directory-1.1.0.2
+-- filepath-1.3.0.0
+
+-- Versions that came with GHC 7.8.2:
+-- base-4.7.0.0
+-- directory-1.2.1.0
+-- filepath-1.3.0.2
+
+-- quickcheck needs to be at least 2.7, as that version has the ===
+-- combinator.  As of 2014-07-05 the oldest version in the 2.7 series
+-- that is on Hackage is 2.7.2.
+
 base :: C.Package
 base = C.closedOpen "base" [4,5,0,0] [4,8]
 
