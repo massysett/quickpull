@@ -49,8 +49,8 @@
 -- When run, this program will run the tests, print the results to
 -- standard output, and exit with an appropriate error code.
 --
--- If your needs are more complicated, study this module.  For
--- example, you can:
+-- If your needs are more complicated, study the "Quickpull.Types" and
+-- "Quickpull.Runners" modules.  For example, you can:
 --
 -- * change the arguments you pass to the QuickCheck driver
 --
@@ -59,6 +59,9 @@
 --
 -- * filter the list of 'Decree' so that you run only some tests
 -- rather than all of them
+--
+-- There is also the "Quickpull.Laws" module, which helps you test
+-- common laws, such as the Monad laws and the Monoid laws.
 --
 -- Advantages of Quickpull:
 --
@@ -87,9 +90,17 @@
 -- For examples of usage, see the tests that are bundled with
 -- Quickpull in the @tests/@ directory.  These tests use Quickpull to
 -- test some common laws, such as the Monad and Monoid laws, on types
--- that come in the standard library.  To see how to integrate
--- Quickpull into a development workflow, see the Quickpull source on
--- Github at
+-- that come in the standard library.  There is a similar test for the
+-- QuickCheck 'Test.QuickCheck.Gen' monad in the @quickcheck-tests/@
+-- directory; interestingly enough, Gen does not satisfy the monad
+-- laws.  To compile and run the @tests/@ tests, run cabal with the
+-- @--enable-tests@ option; it will produce a binary named
+-- @quickpull-tests@.  For the @quickcheck-tests/@ directory, run
+-- Cabal with the @-fbuild-test-gen@ option; it will produce a binary
+-- named @quickpull-test-gen@.
+--
+-- To see how to integrate Quickpull into a development workflow, see
+-- the Quickpull source on Github at
 --
 -- <http://www.github.com/massysett/quickpull>
 --

@@ -44,6 +44,8 @@ properties = C.empty
   , C.prDescription =
     [ "Reads a tree of modules and outputs a module to run all"
     , "QuickCheck tests."
+    , "For more information, please see documentation in the"
+    , "\"Quickpull\" module."
     ]
   }
 
