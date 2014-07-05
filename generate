@@ -2,3 +2,4 @@
 
 runghc genCabal.hs > quickpull.cabal
 runghc -ilib bin/quickpull.hs tests > tests/Decrees.hs
+runghc -ilib bin/quickpull.hs quickcheck-tests > quickcheck-tests/Decrees.hs

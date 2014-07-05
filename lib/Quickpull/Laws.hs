@@ -258,7 +258,7 @@ leftIdentity
   -> Gen (a -> b)
   -- ^ Generates unwrappers
   -> Gen a
-  -- ^ Generates zero values
+  -- ^ Generates identity values
   -> Gen a
   -- ^ Generates right-hand side values
   -> Gen Property
@@ -279,7 +279,7 @@ rightIdentity
   -> Gen (a -> b)
   -- ^ Generates unwrappers
   -> Gen a
-  -- ^ Generates zero values
+  -- ^ Generates identity values
   -> Gen a
   -- ^ Generates left-hand side values
   -> Gen Property
