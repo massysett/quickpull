@@ -83,6 +83,22 @@
 --
 -- * Currently no way to test polymorphic properties; you will have to
 -- monomorphise these yourself.
+--
+-- For examples of usage, see the tests that are bundled with
+-- Quickpull in the @tests/@ directory.  These tests use Quickpull to
+-- test some common laws, such as the Monad and Monoid laws, on types
+-- that come in the standard library.  To see how to integrate
+-- Quickpull into a development workflow, see the Quickpull source on
+-- Github at
+--
+-- <http://www.github.com/massysett/quickpull>
+--
+-- It has a @generate@ script that runs the @quickpull@ binary to
+-- generate the appropriate @Decrees@ modules; after that, @cabal@ can
+-- be used as usual to build the package, executables, and
+-- distribution tarball.  That way, although your test suite will need
+-- Quickpull listed as a build dependency so the tests will build,
+-- your users will not need to do any preprocessing to run the tests.
 
 module Quickpull
   ( -- * Trees of 'Testable'
@@ -97,7 +113,10 @@ module Quickpull
   , Decree(..)
 
   -- * Runners
-  , runTests
+
+  -- | Basic functions to run tests; for more complex needs, see
+  -- "Quickpull.Runners".
+  , quickCheckTree
   , defaultMain
   , defaultMainWith
   ) where
