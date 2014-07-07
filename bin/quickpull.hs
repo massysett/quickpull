@@ -3,7 +3,6 @@ module Main where
 import Control.Monad
 import System.Environment
 import System.Exit
-import System.IO
 import Quickpull.Files
 import Quickpull.Render
 
