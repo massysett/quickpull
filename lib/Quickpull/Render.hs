@@ -24,7 +24,7 @@ metaQual ldr (m, q) = indent 1 $ [ldr] <+> "Decree (" <+>
 
 metaQuals :: [(Meta, Qual)] -> String
 metaQuals ls = case ls of
-  [] -> "[]"
+  [] -> indent 1 "[]"
   x:xs -> metaQual '[' x ++ concatMap (metaQual ',') xs
     ++ indent 1 "]"
 

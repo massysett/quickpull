@@ -35,11 +35,14 @@ modsInDirectory
 
   -> IO [ModDesc]
 modsInDirectory stk strt = do
+  let path = concatDirs strt stk
   filesAndDirs <- fmap (filter (\x -> x /= "." && x /= ".."))
     . fmap sort . getDirectoryContents $ concatDirs strt stk
-  bools <- mapM doesDirectoryExist filesAndDirs
+  let fullNames = map ((path ++ "/") ++)filesAndDirs
+  bools <- mapM doesDirectoryExist fullNames
   let ps = zip bools filesAndDirs
-      dirs = filter isInterestingDir . map snd . filter fst $ ps
+      dirs = filter isInterestingDir
+        . map snd . filter fst $ ps
       files = filter isInterestingFile . map snd
         . filter (not . fst) $ ps
       mods = map (makeModDesc strt stk) files
