@@ -27,7 +27,7 @@ main = do
   as <- getArgs
   pn <- getProgName
   when (as == ["-h"] || as == ["--help"]) $ do
-    hPutStr stderr $ help pn
+    putStr $ help pn
     exitSuccess
   mds <- fmap concat . mapM allModules $ as
   ps <- fmap concat . mapM readAndParse $ mds
