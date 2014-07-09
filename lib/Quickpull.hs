@@ -28,6 +28,11 @@
 -- line (which is probably how you write modules anyway if you are
 -- using layout.)
 --
+-- One problem with this method is that code that is commented out
+-- using the block commenting (with braces) will still be read; at
+-- present a simple workaround is to comment out blocks of code using
+-- per-line commenting instead.
+--
 -- @quickpull@ only gets tests from files ending in @.hs@, and the
 -- property name must be the very first thing on the line; therefore,
 -- literate Haskell files won't work.
