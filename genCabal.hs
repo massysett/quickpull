@@ -62,6 +62,12 @@ properties = C.empty
     , "For more information, please see documentation in the"
     , "\"Quickpull\" module."
     ]
+  , C.prExtraSourceFiles =
+    [ "current-versions.txt"
+    , "minimum-versions.txt"
+    , "genCabal.hs"
+    , "README.md"
+    ]
   }
 
 ghcOptions :: [String]
@@ -100,6 +106,8 @@ executable = C.Executable "quickpull"
   , C.ghcOptions ghcOptions
   ]
 
+-- This tests the Gen monad of QuickCheck.  Not included in the
+-- default tests because it will fail, as Gen is not a true monad.
 exeTestGen :: C.Executable
 exeTestGen = C.Executable "quickpull-test-gen"
   [ C.cif (C.flag "build-test-gen")
@@ -120,9 +128,17 @@ flagTestGen = C.empty
   , C.flManual = True
   }
 
+repo :: C.Repository
+repo = C.empty
+  { C.repoVcs = C.Git
+  , C.repoKind = C.Head
+  , C.repoLocation = "https://github.com/massysett/quickpull.git"
+  }
+
 cabal :: [String] -> C.Cabal
 cabal ms = C.empty
   { C.cProperties = properties
+  , C.cRepositories = [repo]
   , C.cLibrary = Just $ library ms
   , C.cExecutables = [ executable, exeTestGen ]
   , C.cTestSuites = [testSuite]
