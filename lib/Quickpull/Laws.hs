@@ -10,6 +10,8 @@ import Control.Applicative
 import Data.Monoid
 import Quickpull.Types
 import Test.QuickCheck
+  ( Gen, arbitrary, listOf, Property )
+import Quickpull.EqShow ((===))
 
 -- | Tests the monad laws:
 --

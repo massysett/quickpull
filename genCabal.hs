@@ -6,7 +6,7 @@ module Main where
 import qualified Cartel as C
 
 version :: [Int]
-version = [0,2,0,0]
+version = [0,2,0,2]
 
 -- Dependencies are intended to work with GHC 7.4.1.  Versions that
 -- came with GHC 7.4.1:
@@ -14,8 +14,8 @@ version = [0,2,0,0]
 -- directory-1.1.0.2
 -- filepath-1.3.0.0
 
--- Versions that came with GHC 7.8.2:
--- base-4.7.0.0
+-- Versions that came with GHC 7.8.3:
+-- base-4.7.0.1
 -- directory-1.2.1.0
 -- filepath-1.3.0.2
 
@@ -35,13 +35,25 @@ directory = C.closedOpen "directory" [1,1,0,2] [1,3]
 filepath :: C.Package
 filepath = C.closedOpen "filepath" [1,3,0,0] [1,4]
 
-depends :: [C.Package]
-depends =
-  [ base
-  , quickcheck
-  , directory
-  , filepath
+commonOptions :: C.Field a => [a]
+commonOptions =
+  [ C.buildDepends
+    [ base
+    , directory
+    , filepath
+    ]
+  , C.cif (C.flag "old-quick-check")
+    [ C.buildDepends [C.Package "QuickCheck" (Just (C.lt [2,7]))]
+    , C.hsSourceDirs ["quickcheck-old"]
+    ]
+    [ C.buildDepends [ C.closedOpen "QuickCheck" [2,7] [2,8] ]
+    , C.hsSourceDirs ["quickcheck-new"]
+    ]
+  , C.hsSourceDirs ["lib"]
+  , C.ghcOptions ghcOptions
+  , C.defaultLanguage C.Haskell2010
   ]
+
 
 properties :: C.Properties
 properties = C.empty
@@ -67,6 +79,8 @@ properties = C.empty
     , "minimum-versions.txt"
     , "genCabal.hs"
     , "README.md"
+    , "quickcheck-new/Quickpull/EqShow.hs"
+    , "quickcheck-old/Quickpull/EqShow.hs"
     ]
   }
 
@@ -77,33 +91,23 @@ library
   :: [String]
   -- ^ Library modules
   -> C.Library
-library ms = C.Library
-  [ C.buildDepends depends
-  , C.defaultLanguage C.Haskell2010
-  , C.hsSourceDirs ["lib"]
-  , C.ghcOptions ghcOptions
-  , C.LibExposedModules ms
+library ms = C.Library $ commonOptions ++
+  [ C.LibExposedModules ms
   ]
 
 testSuite :: C.TestSuite
-testSuite = C.TestSuite "quickpull-tests"
+testSuite = C.TestSuite "quickpull-tests" $ commonOptions ++
   [ C.TestType C.ExitcodeStdio
   , C.TestMainIs "quickpull-tests.hs"
-  , C.buildDepends depends
   , C.otherModules ["Decrees", "Tests"]
-  , C.ghcOptions ghcOptions
-  , C.hsSourceDirs ["lib", "tests"]
-  , C.defaultLanguage C.Haskell2010
+  , C.hsSourceDirs ["tests"]
   ]
 
 
 executable :: C.Executable
-executable = C.Executable "quickpull"
-  [ C.buildDepends depends
-  , C.defaultLanguage C.Haskell2010
-  , C.hsSourceDirs ["lib", "bin"]
-  , C.ExeMainIs "quickpull.hs"
-  , C.ghcOptions ghcOptions
+executable = C.Executable "quickpull" $ commonOptions ++
+  [ C.hsSourceDirs ["bin"]
+  , C.ExeMainIs "quickpull-main.hs"
   ]
 
 -- This tests the Gen monad of QuickCheck.  Not included in the
@@ -111,13 +115,11 @@ executable = C.Executable "quickpull"
 exeTestGen :: C.Executable
 exeTestGen = C.Executable "quickpull-test-gen"
   [ C.cif (C.flag "build-test-gen")
-    [ C.buildDepends depends ]
+    commonOptions
     [ C.buildable False ]
-  , C.defaultLanguage C.Haskell2010
   , C.ExeMainIs "quickpull-test-gen.hs"
-  , C.hsSourceDirs ["lib", "quickcheck-tests"]
+  , C.hsSourceDirs ["quickcheck-tests"]
   , C.otherModules ["Decrees", "Tests"]
-  , C.ghcOptions ghcOptions
   ]
 
 flagTestGen :: C.Flag
@@ -126,6 +128,14 @@ flagTestGen = C.empty
   , C.flDescription = "Build the quickpull-test-gen executable"
   , C.flDefault = False
   , C.flManual = True
+  }
+
+flagOldQuickCheck :: C.Flag
+flagOldQuickCheck = C.empty
+  { C.flName = "old-quick-check"
+  , C.flDescription = "Use version of QuickCheck before version 2.7"
+  , C.flDefault = False
+  , C.flManual = False
   }
 
 repo :: C.Repository
@@ -142,7 +152,7 @@ cabal ms = C.empty
   , C.cLibrary = Just $ library ms
   , C.cExecutables = [ executable, exeTestGen ]
   , C.cTestSuites = [testSuite]
-  , C.cFlags = [ flagTestGen ]
+  , C.cFlags = [ flagTestGen, flagOldQuickCheck ]
   }
 
 main :: IO ()
