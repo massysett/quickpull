@@ -6,7 +6,7 @@ module Main where
 import qualified Cartel as C
 
 version :: [Int]
-version = [0,2,0,2]
+version = [0,4,0,0]
 
 -- Dependencies are intended to work with GHC 7.4.1.  Versions that
 -- came with GHC 7.4.1:
@@ -78,9 +78,7 @@ properties = C.empty
     , "\"Quickpull\" module."
     ]
   , C.prExtraSourceFiles =
-    [ "current-versions.txt"
-    , "minimum-versions.txt"
-    , "genCabal.hs"
+    [ "genCabal.hs"
     , "README.md"
     , "quickcheck-new/Quickpull/EqShow.hs"
     , "quickcheck-old/Quickpull/EqShow.hs"
