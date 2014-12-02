@@ -35,6 +35,9 @@ directory = C.closedOpen "directory" [1,1,0,2] [1,3]
 filepath :: C.Package
 filepath = C.closedOpen "filepath" [1,3,0,0] [1,4]
 
+barecheck :: C.Package
+barecheck = C.closedOpen "barecheck" [0,2,0,6] [0,3]
+
 commonOptions :: C.Field a => [a]
 commonOptions =
   [ C.buildDepends
@@ -117,6 +120,7 @@ exeTestGen = C.Executable "quickpull-test-gen"
   [ C.cif (C.flag "build-test-gen")
     commonOptions
     [ C.buildable False ]
+  , C.buildDepends [ barecheck ]
   , C.ExeMainIs "quickpull-test-gen.hs"
   , C.hsSourceDirs ["quickcheck-tests"]
   , C.otherModules ["Decrees", "Tests"]

@@ -12,14 +12,14 @@
 module Tests where
 
 import Quickpull
-import Quickpull.Function
 import Quickpull.Laws
 import Test.QuickCheck
 import Test.QuickCheck.Gen
+import Prelude.Generators (function1)
 
 genGen :: Gen (Gen Int)
 genGen = do
-  f <- function coarbitraryShow arbitrary
+  f <- function1 coarbitraryShow arbitrary
   return $ MkGen (curry f)
 
 genFGen :: Gen (Int -> Gen Int)
