@@ -6,7 +6,7 @@ module Main where
 import qualified Cartel as C
 
 version :: [Int]
-version = [0,4,0,0]
+version = [0,4,2,0]
 
 -- Dependencies are intended to work with GHC 7.4.1.  Versions that
 -- came with GHC 7.4.1:
@@ -93,7 +93,7 @@ library
   -- ^ Library modules
   -> C.Library
 library ms = C.Library $ commonOptions ++
-  [ C.LibExposedModules ms
+  [ C.LibExposedModules $ "Quickpull.EqShow" : ms
   ]
 
 testSuite :: C.TestSuite
