@@ -6,7 +6,7 @@ module Main where
 import qualified Cartel as C
 
 version :: [Int]
-version = [0,4,2,0]
+version = [0,4,2,2]
 
 -- Dependencies are intended to work with GHC 7.4.1.  Versions that
 -- came with GHC 7.4.1:
@@ -27,7 +27,7 @@ base :: C.Package
 base = C.closedOpen "base" [4,5,0,0] [4,8]
 
 quickcheck :: C.Package
-quickcheck = C.closedOpen "QuickCheck" [2,7,2] [2,8]
+quickcheck = C.closedOpen "QuickCheck" [2,7,2] [2,9]
 
 directory :: C.Package
 directory = C.closedOpen "directory" [1,1,0,2] [1,3]
