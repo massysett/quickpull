@@ -33,7 +33,7 @@ directory :: C.Package
 directory = C.closedOpen "directory" [1,1,0,2] [1,3]
 
 filepath :: C.Package
-filepath = C.closedOpen "filepath" [1,3,0,0] [1,4]
+filepath = C.closedOpen "filepath" [1,3,0,0] [1,5]
 
 barecheck :: C.Package
 barecheck = C.closedOpen "barecheck" [0,2,0,6] [0,3]
