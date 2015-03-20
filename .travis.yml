@@ -5,7 +5,7 @@ ghc:
 
 before_install:
   - cabal update
-  - cabal install 'cartel ==0.10.2.0' packdeps
+  - cabal install 'cartel ==0.10.0.2' packdeps
   - pwd
   - sh generate
   - packdeps quickpull.cabal
